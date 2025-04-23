@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
+import ChatWithEventEase from "../ChatWithEventEase";
 import heroBg from "../../assets/hero.jpeg";
 import LoginPopup from "../LoginSignupPopup/LoginPopup";
 import SignupPopup from "../LoginSignupPopup/SignupPopup";
 
 const Hero = ({ isLoggedIn, onLoginOpen }) => {
-  const navigate = useNavigate(); // Use the navigate function from useNavigate hook
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
 
@@ -15,20 +16,20 @@ const Hero = ({ isLoggedIn, onLoginOpen }) => {
 
   const handleExploreClick = () => {
     if (isLoggedIn) {
-      navigate("/choose-event"); // Now the navigate function will work properly
+      navigate("/choose-event");
     } else {
-      toggleModal(); // Open login popup if not logged in
+      toggleModal();
     }
   };
 
-  // Effect to check if the user is logged in from localStorage
   useEffect(() => {
     const userEmail = localStorage.getItem("userEmail");
     if (userEmail) {
-      // If logged in, update the logged-in status
       isLoggedIn = true;
     }
   }, []);
+
+  const [showChat, setShowChat] = useState(false);
 
   return (
     <section
@@ -63,22 +64,21 @@ const Hero = ({ isLoggedIn, onLoginOpen }) => {
             </p>
             <div className="flex flex-wrap gap-4 mt-6 justify-center md:justify-start">
               <button
-                onClick={handleExploreClick} // This handles login check and navigation
+                onClick={handleExploreClick}
                 className="px-6 py-3 bg-yellow-300 text-black rounded-full font-semibold shadow-lg hover:bg-yellow-400 transition-all duration-200"
                 aria-label="Explore Events"
               >
                 Explore Events
               </button>
               <button
+                onClick={() => setShowChat(true)}
                 className="px-6 py-3 border border-yellow-300 text-yellow-300 rounded-full font-semibold hover:bg-yellow-300 hover:text-black transition-all duration-200"
-                aria-label="Learn More"
               >
-                Learn More
+                Ask EventEase
               </button>
             </div>
           </motion.div>
 
-          {/* Right Side Card */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -94,7 +94,7 @@ const Hero = ({ isLoggedIn, onLoginOpen }) => {
                 place.
               </p>
               <button
-                onClick={handleExploreClick} // This button triggers the same login check
+                onClick={handleExploreClick}
                 className="mt-4 w-full py-2 bg-yellow-300 text-black rounded-full font-bold hover:bg-yellow-400 transition"
                 aria-label="Get Started"
               >
@@ -105,7 +105,6 @@ const Hero = ({ isLoggedIn, onLoginOpen }) => {
         </div>
       </div>
 
-      {/* Modal Logic for Login */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
           <div className="bg-white p-8 rounded-xl max-w-sm w-full">
@@ -124,6 +123,7 @@ const Hero = ({ isLoggedIn, onLoginOpen }) => {
           </div>
         </div>
       )}
+      {showChat && <ChatWithEventEase onClose={() => setShowChat(false)} />}
     </section>
   );
 };
