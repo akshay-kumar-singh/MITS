@@ -72,7 +72,7 @@ const CollegeFestEvent = () => {
 
   return (
     <div
-      className="p-6 bg-gradient-to-br from-indigo-50 to-cyan-100 min-h-screen"
+      className="p-6 bg-gradient-to-br from-indigo-50 to-cyan-100 min-h-screen mt-14"
       style={{ fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" }}
     >
       <Typography

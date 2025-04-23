@@ -75,7 +75,7 @@ const BirthdayEvent = () => {
 
   return (
     <div
-      className="p-6 bg-gradient-to-br from-pink-50 to-purple-100 min-h-screen"
+      className="p-6 bg-gradient-to-br from-pink-50 to-purple-100 min-h-screen mt-14"
       style={{ fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" }}
     >
       <Typography

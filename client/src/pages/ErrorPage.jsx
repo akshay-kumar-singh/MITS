@@ -21,7 +21,7 @@ const ErrorPage = () => {
   }, [navigate]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 to-pink-100 flex flex-col items-center justify-center p-6">
+    <div className="min-h-screen bg-gradient-to-br from-red-50 to-pink-100 flex flex-col items-center justify-center p-6 mt-14">
       <motion.div
         className="text-center"
         initial={{ opacity: 0, y: -50 }}

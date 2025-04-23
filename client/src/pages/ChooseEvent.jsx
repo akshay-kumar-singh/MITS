@@ -10,7 +10,7 @@ const eventTypes = [
     path: "/wedding-event",
   },
   {
-    name: "Birthday",
+    name: "Baby Functions",
     image: "/images/Hero.jpg",
     path: "/birthday-event",
   },
@@ -24,13 +24,23 @@ const eventTypes = [
     image: "/images/Hero.jpg",
     path: "/cardle-event",
   },
+  {
+    name: "House Event",
+    image: "/images/Hero.jpg",
+    path: "/cardle-event",
+  },
+  {
+    name: "Corporate Event",
+    image: "/images/Hero.jpg",
+    path: "/cardle-event",
+  },
 ];
 
 const ChooseEvent = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-100 p-6 flex flex-col items-center">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-100 p-6 flex flex-col items-center mt-14">
       <motion.h1
         className="text-4xl md:text-5xl font-extrabold text-gray-800 mb-12"
         initial={{ opacity: 0, y: -30 }}
