@@ -51,7 +51,7 @@ const Navbar = () => {
           className="text-2xl font-extrabold tracking-tight drop-shadow-md cursor-pointer"
           onClick={() => navigate("/")}
         >
-          EventEase
+          FESTIVO
         </div>
 
         <div className="hidden md:flex space-x-6">
