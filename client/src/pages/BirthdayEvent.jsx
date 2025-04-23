@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card, CardContent, Typography, Button, Grid, Checkbox, FormControlLabel,
   Radio, RadioGroup, Snackbar, Alert
@@ -20,15 +20,19 @@ const services = [
 ];
 
 const BirthdayEvent = () => {
-  const [selected, setSelected] = useState({});
+  const [selected, setSelected] = useState(() => JSON.parse(localStorage.getItem("birthdaySelected")) || {});
   const [selectAll, setSelectAll] = useState({});
-  const [vendorType, setVendorType] = useState({});
+  const [vendorType, setVendorType] = useState(() => JSON.parse(localStorage.getItem("birthdayVendorType")) || {});
   const [openAlert, setOpenAlert] = useState(false);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    localStorage.setItem("birthdaySelected", JSON.stringify(selected));
+    localStorage.setItem("birthdayVendorType", JSON.stringify(vendorType));
+  }, [selected, vendorType]);
+
   const handleSubmit = (type) => {
-    const hasSelection = selected[type]?.length > 0;
-    if (!hasSelection) {
+    if (!selected[type] || selected[type].length === 0) {
       setOpenAlert(true);
       return;
     }

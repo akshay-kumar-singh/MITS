@@ -10,8 +10,8 @@ const sendEmailToVendors = async (req, res) => {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: process.env.EMAIL_USER, // Your Gmail
-      pass: process.env.EMAIL_PASS  // App-specific password
+      user: process.env.EMAIL_USER, 
+      pass: process.env.EMAIL_PASS  
     }
   });
 
@@ -37,7 +37,6 @@ Team MITS`
       await transporter.sendMail(mailOptions);
     }
 
-    // 2️⃣ Send confirmation to the user
     const confirmationEmail = {
       from: `"MITS Event Organizer" <${process.env.EMAIL_USER}>`,
       to: userEmail,
@@ -60,6 +59,7 @@ MITS Team`
 
   } catch (error) {
     console.error("Email send error:", error);
+    console.log(process.env.EMAIL_USER)
     return res.status(500).json({ message: 'Failed to send emails.', error: error.message });
   }
 };
