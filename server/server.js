@@ -4,26 +4,27 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const geminiRoute = require('./routes/geminiRoute');
+const emailRoutes = require('./routes/emailRoutes');
 
 connectDB();
 
 const app = express();
-app.use(cors({
-  origin: 'http://localhost:5173',
-  credentials: true
-}));
-
 // app.use(cors({
-//   origin: 'https://mit-five.vercel.app',
-//   credentials: true,
+//   origin: 'http://localhost:5173',
+//   credentials: true
 // }));
+
+app.use(cors({
+  origin: 'https://masn-five.vercel.app',
+  credentials: true,
+}));
 
 app.use(express.json());
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/gemini', geminiRoute);
-const emailRoutes = require('./routes/emailRoutes');
+
 app.use('/api/email', emailRoutes);
 
 
