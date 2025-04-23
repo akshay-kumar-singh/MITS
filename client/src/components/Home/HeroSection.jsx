@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
+import ChatWithEventEase from "../ChatWithEventEase";
 import heroBg from "../../assets/hero.jpeg";
 
 const Hero = () => {
+  const [showChat, setShowChat] = useState(false);
+
   return (
     <section
       className="relative w-full h-screen text-white overflow-hidden"
@@ -37,8 +40,11 @@ const Hero = () => {
               <button className="px-6 py-3 bg-yellow-300 text-black rounded-full font-semibold shadow-lg hover:bg-yellow-400 transition-all duration-200">
                 Explore Events
               </button>
-              <button className="px-6 py-3 border border-yellow-300 text-yellow-300 rounded-full font-semibold hover:bg-yellow-300 hover:text-black transition-all duration-200">
-                Learn More
+              <button
+                onClick={() => setShowChat(true)}
+                className="px-6 py-3 border border-yellow-300 text-yellow-300 rounded-full font-semibold hover:bg-yellow-300 hover:text-black transition-all duration-200"
+              >
+                Ask EventEase
               </button>
             </div>
           </motion.div>
@@ -64,6 +70,8 @@ const Hero = () => {
           </motion.div>
         </div>
       </div>
+      {showChat && <ChatWithEventEase onClose={() => setShowChat(false)} />}
+
     </section>
   );
 };
