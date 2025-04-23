@@ -1,13 +1,16 @@
 import React, { useState } from "react";
-import {
-  Card, CardContent, Typography, Button, Grid, Checkbox, FormControlLabel,
-  Radio, RadioGroup, Snackbar, Alert
-} from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Card, CardContent, Typography, Button, Grid, Checkbox, FormControlLabel, Radio, RadioGroup, FormControl } from "@mui/material";
+import { useNavigate } from "react-router-dom"; // Import useNavigate hook
 
 const weddingFunctions = [
-  "Haldi", "Mehendi", "Sangeet", "Reception",
-  "Pre-Wedding Shoot", "Engagement", "Bachelor / Bachelorette Party", "Main Ceremony",
+  "Haldi",
+  "Mehendi",
+  "Sangeet",
+  "Reception",
+  "Pre-Wedding Shoot",
+  "Engagement",
+  "Bachelor / Bachelorette Party",
+  "Main Ceremony",
 ];
 
 const services = [
@@ -25,18 +28,13 @@ const WeddingEvent = () => {
   const [selected, setSelected] = useState({});
   const [selectAll, setSelectAll] = useState({});
   const [vendorType, setVendorType] = useState({});
-  const [openAlert, setOpenAlert] = useState(false);
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Initialize navigate hook
 
   const handleSubmit = (func) => {
-    const hasSelection = selected[func]?.length > 0;
-    if (!hasSelection) {
-      setOpenAlert(true);
-      return;
-    }
-
+    console.log(`Selected Wedding Package for ${func}:`, selected[func]);
     const totalCost = calculateTotalCost(func);
 
+    // Navigate and pass the selected services, total cost, and wedding functions
     navigate('/payment', {
       state: {
         selectedServices: selected,
@@ -44,20 +42,16 @@ const WeddingEvent = () => {
         weddingFunctions: weddingFunctions,
       },
     });
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const toggleService = (func, service) => {
     setSelected((prev) => {
       const current = prev[func] || [];
-      const updatedServices = current.includes(service)
-        ? current.filter((s) => s !== service)
-        : [...current, service];
-
       return {
         ...prev,
-        [func]: updatedServices,
+        [func]: current.includes(service)
+          ? current.filter((s) => s !== service)
+          : [...current, service],
       };
     });
   };
@@ -176,7 +170,6 @@ const WeddingEvent = () => {
               variant="contained"
               size="large"
               onClick={() => handleSubmit(func)}
-              disabled={!selected[func] || selected[func].length === 0}
               sx={{
                 bgcolor: "#9c27b0",
                 color: "white",
@@ -194,13 +187,6 @@ const WeddingEvent = () => {
           </div>
         </div>
       ))}
-
-      {/* Simple Alert using MUI Snackbar */}
-      <Snackbar open={openAlert} autoHideDuration={3000} onClose={() => setOpenAlert(false)}>
-        <Alert onClose={() => setOpenAlert(false)} severity="warning" sx={{ width: '100%' }}>
-          Please select at least one service to proceed!
-        </Alert>
-      </Snackbar>
     </div>
   );
 };

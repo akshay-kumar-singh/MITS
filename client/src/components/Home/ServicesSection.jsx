@@ -6,17 +6,17 @@ const services = [
   {
     title: "Makeup",
     description: "Get a flawless look with professional makeup artists.",
-    image: heroBg,
+    image: "/images/makeup.jpg",
   },
   {
     title: "Photography",
     description: "Capture every moment with our expert photographers.",
-    image: heroBg,
+    image: "/images/photo.jpg",
   },
   {
     title: "Catering",
     description: "Delicious food to make your event unforgettable.",
-    image: heroBg,
+    image: "/images/catering.jpg",
   },
 ];
 

@@ -6,17 +6,17 @@ const events = [
   {
     title: "Weddings",
     description: "Elegance and charm for your big day",
-    image: heroBg,
+    image: "/images/Hero.jpg",
   },
   {
     title: "Birthdays",
     description: "Celebrate another beautiful year of life",
-    image: heroBg,
+    image: "/images/baby.jpg",
   },
   {
     title: "Cradle Ceremony",
     description: "Celebrate your little one's first moments",
-    image: heroBg,
+    image: "/images/cradle.jpg",
   },
 ];
 
