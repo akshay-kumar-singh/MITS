@@ -1,30 +1,13 @@
 import React, { useState } from "react";
 import {
-  Card,
-  CardContent,
-  Typography,
-  Button,
-  Grid,
-  Checkbox,
-  FormControlLabel,
-  Radio,
-  RadioGroup,
-  FormControl,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
+  Card, CardContent, Typography, Button, Grid, Checkbox, FormControlLabel,
+  Radio, RadioGroup, Snackbar, Alert
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const weddingFunctions = [
-  "Haldi",
-  "Mehendi",
-  "Sangeet",
-  "Reception",
-  "Pre-Wedding Shoot",
-  "Engagement",
-  "Bachelor / Bachelorette Party",
-  "Main Ceremony",
+  "Haldi", "Mehendi", "Sangeet", "Reception",
+  "Pre-Wedding Shoot", "Engagement", "Bachelor / Bachelorette Party", "Main Ceremony",
 ];
 
 const services = [
@@ -42,17 +25,39 @@ const WeddingEvent = () => {
   const [selected, setSelected] = useState({});
   const [selectAll, setSelectAll] = useState({});
   const [vendorType, setVendorType] = useState({});
-  const [openDialog, setOpenDialog] = useState(false);
-  const [currentService, setCurrentService] = useState(null);
+  const [openAlert, setOpenAlert] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSubmit = (func) => {
+    const hasSelection = selected[func]?.length > 0;
+    if (!hasSelection) {
+      setOpenAlert(true);
+      return;
+    }
+
+    const totalCost = calculateTotalCost(func);
+
+    navigate('/payment', {
+      state: {
+        selectedServices: selected,
+        totalCost: totalCost,
+        weddingFunctions: weddingFunctions,
+      },
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const toggleService = (func, service) => {
     setSelected((prev) => {
       const current = prev[func] || [];
+      const updatedServices = current.includes(service)
+        ? current.filter((s) => s !== service)
+        : [...current, service];
+
       return {
         ...prev,
-        [func]: current.includes(service)
-          ? current.filter((s) => s !== service)
-          : [...current, service],
+        [func]: updatedServices,
       };
     });
   };
@@ -85,21 +90,6 @@ const WeddingEvent = () => {
       total += serviceObj.prices[vendor];
     });
     return total;
-  };
-
-  const handleSubmit = (func) => {
-    console.log(`Selected Wedding Package for ${func}:`, selected[func]);
-    alert(`Wedding package for ${func} selected! Total Cost: ₹${calculateTotalCost(func)}`);
-  };
-
-  const handleDialogOpen = (service) => {
-    setCurrentService(service);
-    setOpenDialog(true);
-  };
-
-  const handleDialogClose = () => {
-    setOpenDialog(false);
-    setCurrentService(null);
   };
 
   return (
@@ -160,28 +150,18 @@ const WeddingEvent = () => {
                         </CardContent>
                       </Card>
                       {isSelected && (
-                        <>
-                          <div className="mt-3">
-                            <Typography variant="body2">Vendor Type</Typography>
-                            <RadioGroup
-                              value={vendorType[func]?.[service.name] || "low"}
-                              onChange={(e) => handleVendorTypeChange(func, service.name, e.target.value)}
-                              sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}
-                            >
-                              <FormControlLabel value="low" control={<Radio />} label={`Low: ₹${service.prices.low}`} />
-                              <FormControlLabel value="medium" control={<Radio />} label={`Medium: ₹${service.prices.medium}`} />
-                              <FormControlLabel value="high" control={<Radio />} label={`High: ₹${service.prices.high}`} />
-                            </RadioGroup>
-                          </div>
-
-                          {/* <Button
-                            onClick={() => handleDialogOpen(service)}
-                            variant="outlined"
-                            sx={{ mt: 4, borderColor: "#9c27b0", color: "#9c27b0", ":hover": { borderColor: "#7b1fa2" } }}
+                        <div className="mt-3">
+                          <Typography variant="body2">Vendor Type</Typography>
+                          <RadioGroup
+                            value={vendorType[func]?.[service.name] || "low"}
+                            onChange={(e) => handleVendorTypeChange(func, service.name, e.target.value)}
+                            sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}
                           >
-                            See Details
-                          </Button> */}
-                        </>
+                            <FormControlLabel value="low" control={<Radio />} label={`Low: ₹${service.prices.low}`} />
+                            <FormControlLabel value="medium" control={<Radio />} label={`Medium: ₹${service.prices.medium}`} />
+                            <FormControlLabel value="high" control={<Radio />} label={`High: ₹${service.prices.high}`} />
+                          </RadioGroup>
+                        </div>
                       )}
                     </Grid>
                   );
@@ -196,6 +176,7 @@ const WeddingEvent = () => {
               variant="contained"
               size="large"
               onClick={() => handleSubmit(func)}
+              disabled={!selected[func] || selected[func].length === 0}
               sx={{
                 bgcolor: "#9c27b0",
                 color: "white",
@@ -214,25 +195,12 @@ const WeddingEvent = () => {
         </div>
       ))}
 
-      <Dialog open={openDialog} onClose={handleDialogClose}>
-        <DialogTitle>{currentService?.name} Details</DialogTitle>
-        <DialogContent>
-          <Typography variant="body1">{currentService?.description}</Typography>
-          <Typography variant="body2" className="mt-2">
-            Prices: 
-            <ul>
-              <li>Low: ₹{currentService?.prices.low}</li>
-              <li>Medium: ₹{currentService?.prices.medium}</li>
-              <li>High: ₹{currentService?.prices.high}</li>
-            </ul>
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleDialogClose} color="primary">
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {/* Simple Alert using MUI Snackbar */}
+      <Snackbar open={openAlert} autoHideDuration={3000} onClose={() => setOpenAlert(false)}>
+        <Alert onClose={() => setOpenAlert(false)} severity="warning" sx={{ width: '100%' }}>
+          Please select at least one service to proceed!
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

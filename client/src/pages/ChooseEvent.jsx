@@ -46,8 +46,7 @@ const ChooseEvent = () => {
         initial={{ opacity: 0, y: -30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-      >
-        🎉 Choose Your Event Type 🎉
+    >
       </motion.h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl w-full">
         {eventTypes.map((event, index) => (

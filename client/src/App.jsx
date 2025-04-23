@@ -13,6 +13,8 @@ import Footer from "./components/Home/Footer";
 import ProtectedRoute from "./context/ProtectedRoute";
 import CorporateEvent from "./pages/CorporateEvent";
 import HouseEvent from "./pages/HouseEvent";
+import PaymentPage from "./components/PaymentPage";
+import PaymentSuccessful from "./components/PaymentSucessful";
 
 function App() {
   return (
@@ -66,6 +68,8 @@ function App() {
 
           <Route path="/corporate-event" element={<CorporateEvent/>}/>
         <Route path="/house-event" element={<HouseEvent/>}/>
+        <Route path="/payment" element={<PaymentPage/>}/>
+        <Route path="/payment-success" element={<PaymentSuccessful/>}/>
         <Route path="*" element={<ErrorPage />} />
         </Routes>
         <Footer />

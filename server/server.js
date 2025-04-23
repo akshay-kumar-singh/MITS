@@ -8,20 +8,24 @@ dotenv.config();
 connectDB();
 
 const app = express();
-// app.use(cors({
-//   origin: 'http://localhost:5173',
-//   credentials: true
-// }));
-
 app.use(cors({
-  origin: 'https://mit-five.vercel.app',
-  credentials: true,
+  origin: 'http://localhost:5173',
+  credentials: true
 }));
+
+// app.use(cors({
+//   origin: 'https://mit-five.vercel.app',
+//   credentials: true,
+// }));
 
 app.use(express.json());
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
+const emailRoutes = require('./routes/emailRoutes');
+app.use('/api/email', emailRoutes);
+
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
