@@ -7,6 +7,13 @@ import {
   Grid,
   Checkbox,
   FormControlLabel,
+  Radio,
+  RadioGroup,
+  FormControl,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
 } from "@mui/material";
 
 const weddingFunctions = [
@@ -21,19 +28,22 @@ const weddingFunctions = [
 ];
 
 const services = [
-  { name: "Makeup Artist", img: "/images/makeup.jpg" },
-  { name: "Photographer/Videographer", img: "/images/photo.jpg" },
-  { name: "Caterers", img: "/images/catering.jpg" },
-  { name: "Decoration", img: "/images/deco.jpg" },
-  { name: "Mehndi", img: "/images/mehdi.jpg" },
-  { name: "Sound & DJ", img: "/images/dj.jpg" },
-  { name: "Transport / Vehicles", img: "/images/transport.jpg" },
-  { name: "Return Gifts", img: "/images/gifts.jpg" },
+  { name: "Makeup Artist", img: "/images/makeup.jpg", prices: { low: 500, medium: 1500, high: 3000 }, description: "Professional makeup services for bride and groom." },
+  { name: "Photographer/Videographer", img: "/images/photo.jpg", prices: { low: 2000, medium: 5000, high: 10000 }, description: "Capturing your most cherished wedding moments." },
+  { name: "Caterers", img: "/images/catering.jpg", prices: { low: 3000, medium: 8000, high: 15000 }, description: "Delicious food to satisfy your guests." },
+  { name: "Decoration", img: "/images/deco.jpg", prices: { low: 1000, medium: 2500, high: 5000 }, description: "Beautiful wedding decorations for every occasion." },
+  { name: "Mehndi", img: "/images/mehdi.jpg", prices: { low: 500, medium: 1500, high: 2500 }, description: "Traditional henna designs for the bride." },
+  { name: "Sound & DJ", img: "/images/dj.jpg", prices: { low: 800, medium: 2500, high: 5000 }, description: "Music and entertainment for your wedding celebrations." },
+  { name: "Transport / Vehicles", img: "/images/transport.jpg", prices: { low: 1500, medium: 4000, high: 7000 }, description: "Luxury transport for the bride, groom, and guests." },
+  { name: "Return Gifts", img: "/images/gifts.jpg", prices: { low: 500, medium: 1500, high: 3000 }, description: "Memorable return gifts for your guests." },
 ];
 
 const WeddingEvent = () => {
   const [selected, setSelected] = useState({});
   const [selectAll, setSelectAll] = useState({});
+  const [vendorType, setVendorType] = useState({});
+  const [openDialog, setOpenDialog] = useState(false);
+  const [currentService, setCurrentService] = useState(null);
 
   const toggleService = (func, service) => {
     setSelected((prev) => {
@@ -56,23 +66,54 @@ const WeddingEvent = () => {
     }));
   };
 
-  const handleSubmit = () => {
-    console.log("Selected Wedding Package:", selected);
-    alert("Wedding package selected! Check console for data.");
+  const handleVendorTypeChange = (func, service, value) => {
+    setVendorType((prev) => ({
+      ...prev,
+      [func]: {
+        ...prev[func],
+        [service]: value,
+      },
+    }));
+  };
+
+  const calculateTotalCost = (func) => {
+    let total = 0;
+    const funcServices = selected[func] || [];
+    funcServices.forEach((service) => {
+      const vendor = vendorType[func]?.[service] || "low";
+      const serviceObj = services.find((s) => s.name === service);
+      total += serviceObj.prices[vendor];
+    });
+    return total;
+  };
+
+  const handleSubmit = (func) => {
+    console.log(`Selected Wedding Package for ${func}:`, selected[func]);
+    alert(`Wedding package for ${func} selected! Total Cost: ₹${calculateTotalCost(func)}`);
+  };
+
+  const handleDialogOpen = (service) => {
+    setCurrentService(service);
+    setOpenDialog(true);
+  };
+
+  const handleDialogClose = () => {
+    setOpenDialog(false);
+    setCurrentService(null);
   };
 
   return (
     <div className="min-h-screen p-6 pt-20 bg-gradient-to-br from-pink-50 to-purple-100">
-      <Typography variant="h3" align="center" className="font-bold text-purple-500 mb-10">
-       
+      <Typography variant="h3" align="center" sx={{ fontWeight: "bold", color: "#9c27b0", mb: 5 }}>
+        Wedding Package Selection
       </Typography>
 
       {weddingFunctions.map((func) => (
         <div key={func} className="mb-10">
-          <Card className="rounded-3xl shadow-xl overflow-hidden">
-            <div className="bg-gradient-to-r from-purple-300 to-pink-300 p-4">
+          <Card sx={{ borderRadius: "20px", boxShadow: 3 }}>
+            <div className="bg-gradient-to-r from-purple-300 to-pink-300 p-4 rounded-t-xl">
               <div className="flex items-center justify-between">
-                <Typography variant="h5" className="text-white font-bold">
+                <Typography variant="h5" sx={{ color: "white", fontWeight: "bold" }}>
                   {func}
                 </Typography>
                 <FormControlLabel
@@ -97,42 +138,101 @@ const WeddingEvent = () => {
                     <Grid item xs={12} sm={6} md={3} key={service.name}>
                       <Card
                         onClick={() => toggleService(func, service.name)}
-                        className={`cursor-pointer transition-all duration-300 rounded-xl shadow-md hover:shadow-xl ${
-                          isSelected
-                            ? "border-4 border-purple-400 scale-105"
-                            : "border border-gray-200"
-                        }`}
+                        sx={{
+                          cursor: "pointer",
+                          borderRadius: "12px",
+                          boxShadow: 1,
+                          "&:hover": { boxShadow: 6 },
+                          border: isSelected ? "4px solid #9c27b0" : "1px solid #e0e0e0",
+                          transform: isSelected ? "scale(1.05)" : "scale(1)",
+                          transition: "all 0.3s ease",
+                        }}
                       >
                         <img
                           src={service.img}
                           alt={service.name}
                           className="w-full h-40 object-cover rounded-t-xl"
                         />
-                        <CardContent className="text-center">
-                          <Typography variant="subtitle1" className="font-medium">
+                        <CardContent sx={{ textAlign: "center" }}>
+                          <Typography variant="subtitle1" sx={{ fontWeight: "medium" }}>
                             {service.name}
                           </Typography>
                         </CardContent>
                       </Card>
+                      {isSelected && (
+                        <>
+                          <div className="mt-3">
+                            <Typography variant="body2">Vendor Type</Typography>
+                            <RadioGroup
+                              value={vendorType[func]?.[service.name] || "low"}
+                              onChange={(e) => handleVendorTypeChange(func, service.name, e.target.value)}
+                              sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}
+                            >
+                              <FormControlLabel value="low" control={<Radio />} label={`Low: ₹${service.prices.low}`} />
+                              <FormControlLabel value="medium" control={<Radio />} label={`Medium: ₹${service.prices.medium}`} />
+                              <FormControlLabel value="high" control={<Radio />} label={`High: ₹${service.prices.high}`} />
+                            </RadioGroup>
+                          </div>
+
+                          {/* <Button
+                            onClick={() => handleDialogOpen(service)}
+                            variant="outlined"
+                            sx={{ mt: 4, borderColor: "#9c27b0", color: "#9c27b0", ":hover": { borderColor: "#7b1fa2" } }}
+                          >
+                            See Details
+                          </Button> */}
+                        </>
+                      )}
                     </Grid>
                   );
                 })}
               </Grid>
             </CardContent>
           </Card>
+
+          <div className="mt-4 text-center">
+            <Typography variant="body2">Total Cost for {func}: ₹{calculateTotalCost(func)}</Typography>
+            <Button
+              variant="contained"
+              size="large"
+              onClick={() => handleSubmit(func)}
+              sx={{
+                bgcolor: "#9c27b0",
+                color: "white",
+                fontWeight: "bold",
+                py: 2,
+                px: 6,
+                borderRadius: "12px",
+                boxShadow: 6,
+                ":hover": { bgcolor: "#7b1fa2", boxShadow: 8 },
+                mt: 2,
+              }}
+            >
+              Confirm {func} Package
+            </Button>
+          </div>
         </div>
       ))}
 
-      <div className="mt-10 text-center">
-        <Button
-          variant="contained"
-          size="large"
-          onClick={handleSubmit}
-          className="bg-gradient-to-r from-purple-400 to-pink-400 text-white font-semibold py-2 px-6 rounded-xl shadow-lg hover:from-purple-500 hover:to-pink-500"
-        >
-          Confirm Wedding Package
-        </Button>
-      </div>
+      <Dialog open={openDialog} onClose={handleDialogClose}>
+        <DialogTitle>{currentService?.name} Details</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1">{currentService?.description}</Typography>
+          <Typography variant="body2" className="mt-2">
+            Prices: 
+            <ul>
+              <li>Low: ₹{currentService?.prices.low}</li>
+              <li>Medium: ₹{currentService?.prices.medium}</li>
+              <li>High: ₹{currentService?.prices.high}</li>
+            </ul>
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
