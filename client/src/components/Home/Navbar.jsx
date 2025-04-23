@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { motion, AnimatePresence } from "framer-motion";
 import LoginPopup from "../LoginSignupPopup/LoginPopup";
 import SignupPopup from "../LoginSignupPopup/SignupPopup";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const tabs = [
   { title: "Events", children: ["Weddings", "Birthdays", "Cradle Ceremony"] },
@@ -16,9 +18,34 @@ const Navbar = () => {
   const [activeTab, setActiveTab] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
-
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userInitial, setUserInitial] = useState("");
   const toggleModal = () => setIsModalOpen(!isModalOpen);
   const toggleForm = () => setIsLogin(!isLogin);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("userEmail");
+    setIsLoggedIn(false);
+    setUserInitial("");
+    toast.success("Logged out successfully!");
+    navigate("/");
+  };
+
+  const handleLoginSuccess = (email) => {
+    localStorage.setItem("userEmail", email);
+    setIsLoggedIn(true);
+    setUserInitial(email.charAt(0).toUpperCase());
+    setIsModalOpen(false);
+  };
+
+  useEffect(() => {
+    const userEmail = localStorage.getItem("userEmail");
+    if (userEmail) {
+      setIsLoggedIn(true);
+      setUserInitial(userEmail.charAt(0).toUpperCase());
+    }
+  }, []);
 
   return (
     <nav className="fixed top-0 left-0 w-full z-50 bg-gradient-to-r from-purple-700 to-indigo-800 text-white shadow-md">
@@ -64,13 +91,27 @@ const Navbar = () => {
           ))}
         </div>
 
-        <div className="hidden md:flex">
-          <button
-            onClick={toggleModal}
-            className="px-5 py-2 rounded-full border border-yellow-400 hover:bg-yellow-400 hover:text-black transition font-semibold"
-          >
-            Login
-          </button>
+        <div className="hidden md:flex items-center space-x-4">
+          {isLoggedIn ? (
+            <>
+              <div className="w-10 h-10 rounded-full bg-yellow-400 text-black flex items-center justify-center font-bold text-lg">
+                {userInitial}
+              </div>
+              <button
+                onClick={handleLogout}
+                className="px-5 py-2 rounded-full border border-yellow-400 hover:bg-yellow-400 hover:text-black transition font-semibold"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={toggleModal}
+              className="px-5 py-2 rounded-full border border-yellow-400 hover:bg-yellow-400 hover:text-black transition font-semibold"
+            >
+              Login
+            </button>
+          )}
         </div>
 
         <div className="md:hidden">
@@ -101,12 +142,21 @@ const Navbar = () => {
               </div>
             ))}
             <div className="pt-4 border-t border-indigo-700 mt-4">
-              <button
-                onClick={toggleModal}
-                className="w-full py-2 border border-yellow-400 rounded hover:bg-yellow-400 hover:text-black font-semibold"
-              >
-                Login
-              </button>
+              {isLoggedIn ? (
+                <button
+                  onClick={handleLogout}
+                  className="w-full py-2 border border-yellow-400 rounded hover:bg-yellow-400 hover:text-black font-semibold"
+                >
+                  Logout
+                </button>
+              ) : (
+                <button
+                  onClick={toggleModal}
+                  className="w-full py-2 border border-yellow-400 rounded hover:bg-yellow-400 hover:text-black font-semibold"
+                >
+                  Login
+                </button>
+              )}
             </div>
           </motion.div>
         )}
@@ -116,7 +166,11 @@ const Navbar = () => {
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
           <div className="bg-white p-8 rounded-xl max-w-sm w-full">
             {isLogin ? (
-              <LoginPopup toggleForm={toggleForm} closeModal={toggleModal} />
+              <LoginPopup
+                toggleForm={toggleForm}
+                closeModal={toggleModal}
+                onLoginSuccess={handleLoginSuccess}
+              />
             ) : (
               <SignupPopup toggleForm={toggleForm} closeModal={toggleModal} />
             )}
