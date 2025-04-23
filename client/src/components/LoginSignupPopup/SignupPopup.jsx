@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { FaUser, FaEnvelope, FaLock, FaTimes } from "react-icons/fa";
+import { signupUser } from "../../services/api";
+import toast from "react-hot-toast";
 
 const SignupPopup = ({ toggleForm, closeModal }) => {
   const [name, setName] = useState("");
@@ -9,6 +11,7 @@ const SignupPopup = ({ toggleForm, closeModal }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [passwordError, setPasswordError] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const validatePassword = () => {
     if (password !== confirmPassword) {
@@ -19,16 +22,23 @@ const SignupPopup = ({ toggleForm, closeModal }) => {
     return true;
   };
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
     if (!validatePassword()) return;
 
     setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      console.log("Signed up with:", { name, email, password });
+    setErrorMessage("");
+
+    try {
+      await signupUser(name, email, password);
+      toast.success("Signup successful! Please log in.");
+      closeModal();
+      toggleForm();
+    } catch (error) {
+      setErrorMessage(error.message);
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -67,6 +77,7 @@ const SignupPopup = ({ toggleForm, closeModal }) => {
             required
           />
         </div>
+        {errorMessage && <p className="text-red-500 text-sm">{errorMessage}</p>}
 
         <div className="relative">
           <FaEnvelope className="absolute left-4 top-4 text-gray-400" />

@@ -1,19 +1,32 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { FaEnvelope, FaLock, FaTimes } from "react-icons/fa";
+import { loginUser } from "../../services/api";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
-const LoginPopup = ({ toggleForm, closeModal }) => {
+const LoginPopup = ({ toggleForm, closeModal, onLoginSuccess }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setTimeout(() => {
-      console.log("Logged in with:", { email, password });
+    setErrorMessage("");
+
+    try {
+      await loginUser(email, password);
+      toast.success("Logged in successfully!");
+      onLoginSuccess(email);
+      navigate("/choose-event");
+    } catch (error) {
+      setErrorMessage(error.message);
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -51,6 +64,7 @@ const LoginPopup = ({ toggleForm, closeModal }) => {
             required
           />
         </div>
+        {errorMessage && <p className="text-red-500 text-sm">{errorMessage}</p>}
 
         <div className="relative">
           <FaLock className="absolute left-4 top-4 text-gray-400" />
