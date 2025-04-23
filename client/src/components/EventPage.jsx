@@ -9,29 +9,7 @@ import {
   FormControlLabel,
 } from "@mui/material";
 
-const weddingFunctions = [
-  "Haldi",
-  "Mehendi",
-  "Sangeet",
-  "Reception",
-  "Pre-Wedding Shoot",
-  "Engagement",
-  "Bachelor / Bachelorette Party",
-  "Main Ceremony",
-];
-
-const services = [
-  { name: "Makeup Artist", img: "/images/makeup.jpg" },
-  { name: "Photographer/Videographer", img: "/images/photo.jpg" },
-  { name: "Caterers", img: "/images/catering.jpg" },
-  { name: "Decoration", img: "/images/deco.jpg" },
-  { name: "Mehndi", img: "/images/mehdi.jpg" },
-  { name: "Sound & DJ", img: "/images/dj.jpg" },
-  { name: "Transport / Vehicles", img: "/images/transport.jpg" },
-  { name: "Return Gifts", img: "/images/gifts.jpg" },
-];
-
-const WeddingEvent = () => {
+const EventPage = ({ eventType, eventFunctions, services }) => {
   const [selected, setSelected] = useState({});
   const [selectAll, setSelectAll] = useState({});
 
@@ -57,17 +35,17 @@ const WeddingEvent = () => {
   };
 
   const handleSubmit = () => {
-    console.log("Selected Wedding Package:", selected);
-    alert("Wedding package selected! Check console for data.");
+    console.log(`${eventType} Package Selected:`, selected);
+    alert(`${eventType} package selected! Check console for data.`);
   };
 
   return (
     <div className="min-h-screen p-6 pt-20 bg-gradient-to-br from-pink-50 to-purple-100">
       <Typography variant="h3" align="center" className="font-bold text-purple-500 mb-10">
-       
+        Plan Your {eventType} Event
       </Typography>
 
-      {weddingFunctions.map((func) => (
+      {eventFunctions.map((func) => (
         <div key={func} className="mb-10">
           <Card className="rounded-3xl shadow-xl overflow-hidden">
             <div className="bg-gradient-to-r from-purple-300 to-pink-300 p-4">
@@ -130,11 +108,11 @@ const WeddingEvent = () => {
           onClick={handleSubmit}
           className="bg-gradient-to-r from-purple-400 to-pink-400 text-white font-semibold py-2 px-6 rounded-xl shadow-lg hover:from-purple-500 hover:to-pink-500"
         >
-          Confirm Wedding Package
+          Confirm {eventType} Package
         </Button>
       </div>
     </div>
   );
 };
 
-export default WeddingEvent;
+export default EventPage;

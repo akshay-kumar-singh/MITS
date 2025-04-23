@@ -9,29 +9,29 @@ import {
   FormControlLabel,
 } from "@mui/material";
 
-const weddingFunctions = [
-  "Haldi",
-  "Mehendi",
-  "Sangeet",
-  "Reception",
-  "Pre-Wedding Shoot",
-  "Engagement",
-  "Bachelor / Bachelorette Party",
-  "Main Ceremony",
+const houseFunctions = [
+  "Housewarming",
+  "Birthday at Home",
+  "Festive Gathering",
+  "Get-together",
+  "Kitty Party",
+  "Anniversary at Home",
+  "Baby Shower",
+  "Puja Ceremony",
 ];
 
-const services = [
-  { name: "Makeup Artist", img: "/images/makeup.jpg" },
-  { name: "Photographer/Videographer", img: "/images/photo.jpg" },
-  { name: "Caterers", img: "/images/catering.jpg" },
-  { name: "Decoration", img: "/images/deco.jpg" },
-  { name: "Mehndi", img: "/images/mehdi.jpg" },
-  { name: "Sound & DJ", img: "/images/dj.jpg" },
-  { name: "Transport / Vehicles", img: "/images/transport.jpg" },
+const houseServices = [
+  { name: "Catering", img: "/images/catering.jpg" },
+  { name: "Home Decor", img: "/images/deco.jpg" },
+  { name: "Sound System", img: "/images/dj.jpg" },
+  { name: "Tent Setup", img: "/images/tent.jpg" },
+  { name: "Lighting", img: "/images/light.jpg" },
+  { name: "Photography", img: "/images/photo.jpg" },
   { name: "Return Gifts", img: "/images/gifts.jpg" },
+  { name: "Clean-up Crew", img: "/images/clean.jpg" },
 ];
 
-const WeddingEvent = () => {
+const HouseEvent = () => {
   const [selected, setSelected] = useState({});
   const [selectAll, setSelectAll] = useState({});
 
@@ -52,25 +52,25 @@ const WeddingEvent = () => {
     setSelectAll((prev) => ({ ...prev, [func]: !isSelected }));
     setSelected((prev) => ({
       ...prev,
-      [func]: !isSelected ? services.map((s) => s.name) : [],
+      [func]: !isSelected ? houseServices.map((s) => s.name) : [],
     }));
   };
 
   const handleSubmit = () => {
-    console.log("Selected Wedding Package:", selected);
-    alert("Wedding package selected! Check console for data.");
+    console.log("Selected House Event Package:", selected);
+    alert("House event package selected! Check console for data.");
   };
 
   return (
-    <div className="min-h-screen p-6 pt-20 bg-gradient-to-br from-pink-50 to-purple-100">
-      <Typography variant="h3" align="center" className="font-bold text-purple-500 mb-10">
-       
+    <div className="min-h-screen p-6 pt-20 bg-gradient-to-br from-yellow-50 to-orange-100">
+      <Typography variant="h3" align="center" className="font-bold text-orange-500 mb-10">
+        
       </Typography>
 
-      {weddingFunctions.map((func) => (
+      {houseFunctions.map((func) => (
         <div key={func} className="mb-10">
           <Card className="rounded-3xl shadow-xl overflow-hidden">
-            <div className="bg-gradient-to-r from-purple-300 to-pink-300 p-4">
+            <div className="bg-gradient-to-r from-yellow-300 to-orange-300 p-4">
               <div className="flex items-center justify-between">
                 <Typography variant="h5" className="text-white font-bold">
                   {func}
@@ -91,7 +91,7 @@ const WeddingEvent = () => {
             </div>
             <CardContent>
               <Grid container spacing={3}>
-                {services.map((service) => {
+                {houseServices.map((service) => {
                   const isSelected = selected[func]?.includes(service.name);
                   return (
                     <Grid item xs={12} sm={6} md={3} key={service.name}>
@@ -99,7 +99,7 @@ const WeddingEvent = () => {
                         onClick={() => toggleService(func, service.name)}
                         className={`cursor-pointer transition-all duration-300 rounded-xl shadow-md hover:shadow-xl ${
                           isSelected
-                            ? "border-4 border-purple-400 scale-105"
+                            ? "border-4 border-orange-400 scale-105"
                             : "border border-gray-200"
                         }`}
                       >
@@ -128,13 +128,13 @@ const WeddingEvent = () => {
           variant="contained"
           size="large"
           onClick={handleSubmit}
-          className="bg-gradient-to-r from-purple-400 to-pink-400 text-white font-semibold py-2 px-6 rounded-xl shadow-lg hover:from-purple-500 hover:to-pink-500"
+          className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white font-semibold py-2 px-6 rounded-xl shadow-lg hover:from-yellow-500 hover:to-orange-500"
         >
-          Confirm Wedding Package
+          Confirm House Event Package
         </Button>
       </div>
     </div>
   );
 };
 
-export default WeddingEvent;
+export default HouseEvent;

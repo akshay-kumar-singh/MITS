@@ -5,7 +5,6 @@ import {
   Typography,
   Button,
   Grid,
-  Fade,
   Checkbox,
   FormControlLabel,
 } from "@mui/material";
@@ -20,15 +19,14 @@ const birthdayFunctions = [
 ];
 
 const services = [
-  { name: "Venue", img: "/images/Hero.jpg" },
-  { name: "Catering", img: "/images/Hero.jpg" },
-  { name: "Photographer/Videographer", img: "/images/Hero.jpg" },
-  { name: "Decoration", img: "/images/Hero.jpg" },
-  { name: "Sound & DJ", img: "/images/Hero.jpg" },
-  { name: "Party Favors", img: "/images/Hero.jpg" },
-  { name: "Games & Activities", img: "/images/Hero.jpg" },
-  { name: "Cake", img: "/images/Hero.jpg" },
-  { name: "Return Gifts", img: "/images/Hero.jpg" },
+  { name: "Catering", img: "/images/catering.jpg" },
+  { name: "Photographer/Videographer", img: "/images/photo.jpg" },
+  { name: "Decoration", img: "/images/deco.jpg" },
+  { name: "Sound & DJ", img: "/images/dj.jpg" },
+  { name: "Party Favors", img: "/images/party.jpg" },
+  { name: "Games & Activities", img: "/images/games.jpg" },
+  { name: "Cake", img: "/images/cake.jpg" },
+  { name: "Return Gifts", img: "/images/gifts.jpg" },
 ];
 
 const BirthdayEvent = () => {
@@ -48,24 +46,12 @@ const BirthdayEvent = () => {
   };
 
   const toggleSelectAll = (func) => {
-    setSelectAll((prev) => {
-      const isSelected = prev[func];
-      const allServices = services.map((service) => service.name);
-      return {
-        ...prev,
-        [func]: !isSelected,
-      };
-    });
-
-    setSelected((prev) => {
-      const updatedSelected = { ...prev };
-      if (selectAll[func]) {
-        updatedSelected[func] = [];
-      } else {
-        updatedSelected[func] = services.map((service) => service.name);
-      }
-      return updatedSelected;
-    });
+    const isSelected = selectAll[func];
+    setSelectAll((prev) => ({ ...prev, [func]: !isSelected }));
+    setSelected((prev) => ({
+      ...prev,
+      [func]: !isSelected ? services.map((s) => s.name) : [],
+    }));
   };
 
   const handleSubmit = () => {
@@ -74,119 +60,75 @@ const BirthdayEvent = () => {
   };
 
   return (
-    <div
-      className="p-6 bg-gradient-to-br from-pink-50 to-purple-100 min-h-screen mt-14"
-      style={{ fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" }}
-    >
-      <Typography
-        variant="h3"
-        align="center"
-        gutterBottom
-        sx={{ fontWeight: "bold", color: "#f57c00" }}
-      >
-        🎉 Create Your Birthday Party Package 🎉
+    <div className="min-h-screen p-6 pt-20 bg-gradient-to-br from-yellow-50 to-pink-100">
+      <Typography variant="h3" align="center" className="font-bold text-orange-500 mb-10">
+       
       </Typography>
 
       {birthdayFunctions.map((func, index) => (
-        <Fade in={true} timeout={700 + index * 200} key={func}>
-          <Card
-            sx={{
-              mt: 4,
-              padding: 2,
-              boxShadow: 6,
-              borderRadius: 4,
-              backgroundColor: "#ffffffd9",
-            }}
-          >
+        <div key={func} className="mb-10">
+          <Card className="rounded-3xl shadow-xl overflow-hidden">
+            <div className="bg-gradient-to-r from-orange-300 to-pink-300 p-4">
+              <div className="flex items-center justify-between">
+                <Typography variant="h5" className="text-white font-bold">
+                  {func}
+                </Typography>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={selectAll[func] || false}
+                      onChange={() => toggleSelectAll(func)}
+                      color="default"
+                      sx={{ color: "white" }}
+                    />
+                  }
+                  label="Select All"
+                  className="text-white"
+                />
+              </div>
+            </div>
             <CardContent>
-              <Typography
-                variant="h5"
-                gutterBottom
-                sx={{ color: "#fb8c00", fontWeight: "600" }}
-              >
-                {func}
-              </Typography>
-
-              {/* Checkbox for Select All */}
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={selectAll[func] || false}
-                    onChange={() => toggleSelectAll(func)}
-                    color="primary"
-                  />
-                }
-                label="Select All"
-              />
-
               <Grid container spacing={3}>
-                {services.map((service) => (
-                  <Grid item xs={12} sm={6} md={4} key={service.name}>
-                    <Card
-                      onClick={() => toggleService(func, service.name)}
-                      sx={{
-                        cursor: "pointer",
-                        border: selected[func]?.includes(service.name)
-                          ? "3px solid #f57c00"
-                          : "1px solid #e0e0e0",
-                        transition: "0.3s",
-                        borderRadius: 3,
-                        boxShadow: selected[func]?.includes(service.name)
-                          ? 6
-                          : 2,
-                        transform: selected[func]?.includes(service.name)
-                          ? "scale(1.02)"
-                          : "scale(1)",
-                      }}
-                    >
-                      <CardContent>
+                {services.map((service) => {
+                  const isSelected = selected[func]?.includes(service.name);
+                  return (
+                    <Grid item xs={12} sm={6} md={3} key={service.name}>
+                      <Card
+                        onClick={() => toggleService(func, service.name)}
+                        className={`cursor-pointer transition-all duration-300 rounded-xl shadow-md hover:shadow-xl ${
+                          isSelected
+                            ? "border-4 border-orange-400 scale-105"
+                            : "border border-gray-200"
+                        }`}
+                      >
                         <img
                           src={service.img}
                           alt={service.name}
-                          style={{
-                            width: 50,
-                            height: 50,
-                            objectFit: "cover",
-                            marginBottom: 10,
-                            borderRadius: "50%",
-                          }}
+                          className="w-full h-40 object-cover rounded-t-xl"
                         />
-                        <Typography
-                          variant="body1"
-                          align="center"
-                          sx={{ fontWeight: 500 }}
-                        >
-                          {service.name}
-                        </Typography>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                ))}
+                        <CardContent className="text-center">
+                          <Typography variant="subtitle1" className="font-medium">
+                            {service.name}
+                          </Typography>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  );
+                })}
               </Grid>
             </CardContent>
           </Card>
-        </Fade>
+        </div>
       ))}
 
-      <div className="mt-8 text-center">
+      <div className="mt-10 text-center">
         <Button
           variant="contained"
           size="large"
           onClick={handleSubmit}
-          sx={{
-            mt: 4,
-            background: "linear-gradient(to right, #fb8c00, #ff7043)",
-            color: "white",
-            paddingX: 4,
-            paddingY: 1.5,
-            borderRadius: 3,
-            fontWeight: "bold",
-            '&:hover': {
-              background: "linear-gradient(to right, #f57c00, #ff5722)",
-            },
-          }}
+          className="bg-gradient-to-r from-orange-400 to-pink-400 text-white font-semibold py-2 px-6 rounded-xl shadow-lg hover:from-orange-500 hover:to-pink-500"
         >
-          Confirm Package
+          Confirm Birthday Package
         </Button>
       </div>
     </div>

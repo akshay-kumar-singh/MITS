@@ -9,29 +9,29 @@ import {
   FormControlLabel,
 } from "@mui/material";
 
-const weddingFunctions = [
-  "Haldi",
-  "Mehendi",
-  "Sangeet",
-  "Reception",
-  "Pre-Wedding Shoot",
-  "Engagement",
-  "Bachelor / Bachelorette Party",
-  "Main Ceremony",
+const corporateFunctions = [
+  "Conferences",
+  "Team Building",
+  "Workshops",
+  "Product Launch",
+  "Networking",
+  "Seminars",
+  "Award Ceremonies",
+  "Panel Discussions",
 ];
 
 const services = [
-  { name: "Makeup Artist", img: "/images/makeup.jpg" },
-  { name: "Photographer/Videographer", img: "/images/photo.jpg" },
-  { name: "Caterers", img: "/images/catering.jpg" },
+  { name: "Catering", img: "/images/catering.jpg" },
+  { name: "Event Planning", img: "/images/event.jpg" },
+  { name: "Audio-Visual", img: "/images/audio.jpg" },
   { name: "Decoration", img: "/images/deco.jpg" },
-  { name: "Mehndi", img: "/images/mehdi.jpg" },
-  { name: "Sound & DJ", img: "/images/dj.jpg" },
-  { name: "Transport / Vehicles", img: "/images/transport.jpg" },
-  { name: "Return Gifts", img: "/images/gifts.jpg" },
+  { name: "Photography/Videography", img: "/images/photo.jpg" },
+  { name: "Guest Speakers", img: "/images/dj.jpg" },
+  { name: "Transportation", img: "/images/transport.jpg" },
+  { name: "Security", img: "/images/security.jpg" },
 ];
 
-const WeddingEvent = () => {
+const CorporateEvent = () => {
   const [selected, setSelected] = useState({});
   const [selectAll, setSelectAll] = useState({});
 
@@ -57,20 +57,20 @@ const WeddingEvent = () => {
   };
 
   const handleSubmit = () => {
-    console.log("Selected Wedding Package:", selected);
-    alert("Wedding package selected! Check console for data.");
+    console.log("Selected Corporate Event Package:", selected);
+    alert("Corporate event package selected! Check console for data.");
   };
 
   return (
-    <div className="min-h-screen p-6 pt-20 bg-gradient-to-br from-pink-50 to-purple-100">
-      <Typography variant="h3" align="center" className="font-bold text-purple-500 mb-10">
-       
+    <div className="min-h-screen p-6 pt-20 bg-gradient-to-br from-blue-50 to-green-100">
+      <Typography variant="h3" align="center" className="font-bold text-blue-500 mb-10">
+ 
       </Typography>
 
-      {weddingFunctions.map((func) => (
+      {corporateFunctions.map((func) => (
         <div key={func} className="mb-10">
           <Card className="rounded-3xl shadow-xl overflow-hidden">
-            <div className="bg-gradient-to-r from-purple-300 to-pink-300 p-4">
+            <div className="bg-gradient-to-r from-blue-300 to-green-300 p-4">
               <div className="flex items-center justify-between">
                 <Typography variant="h5" className="text-white font-bold">
                   {func}
@@ -99,7 +99,7 @@ const WeddingEvent = () => {
                         onClick={() => toggleService(func, service.name)}
                         className={`cursor-pointer transition-all duration-300 rounded-xl shadow-md hover:shadow-xl ${
                           isSelected
-                            ? "border-4 border-purple-400 scale-105"
+                            ? "border-4 border-blue-400 scale-105"
                             : "border border-gray-200"
                         }`}
                       >
@@ -128,13 +128,13 @@ const WeddingEvent = () => {
           variant="contained"
           size="large"
           onClick={handleSubmit}
-          className="bg-gradient-to-r from-purple-400 to-pink-400 text-white font-semibold py-2 px-6 rounded-xl shadow-lg hover:from-purple-500 hover:to-pink-500"
+          className="bg-gradient-to-r from-blue-400 to-green-400 text-white font-semibold py-2 px-6 rounded-xl shadow-lg hover:from-blue-500 hover:to-green-500"
         >
-          Confirm Wedding Package
+          Confirm Corporate Event Package
         </Button>
       </div>
     </div>
   );
 };
 
-export default WeddingEvent;
+export default CorporateEvent;

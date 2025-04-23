@@ -9,6 +9,8 @@ import CollegeFest from "./pages/CollegeFest";
 import ErrorPage from "./pages/ErrorPage";
 import Navbar from "./components/Home/Navbar";
 import Footer from "./components/Home/Footer";
+import CorporateEvent from "./pages/CorporateEvent";
+import HouseEvent from "./pages/HouseEvent";
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
         <Route path="/birthday-event" element={<BirthdayEvent/>}/>
         <Route path="/cardle-event" element={<CardleEvent/>}/>
         <Route path="/college-event" element={<CollegeFest/>}/>
+        <Route path="/corporate-event" element={<CorporateEvent/>}/>
+        <Route path="/house-event" element={<HouseEvent/>}/>
         <Route path="*" element={<ErrorPage/>}/>
       </Routes>
       <Footer/>
