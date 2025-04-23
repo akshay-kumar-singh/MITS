@@ -14,7 +14,7 @@ const app = express();
 // }));
 
 app.use(cors({
-  origin: 'https://your-frontend.onrender.com',
+  origin: 'https://mit-five.vercel.app',
   credentials: true,
 }));
 
