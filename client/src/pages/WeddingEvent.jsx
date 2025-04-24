@@ -1,86 +1,119 @@
-import React, { useState, useEffect } from "react";
-import { Card, CardContent, Typography, Button, Grid, Checkbox, FormControlLabel, Radio, RadioGroup, Snackbar, Alert } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { Card, CardContent, Typography, Button, Grid, Checkbox, FormControlLabel, Radio, RadioGroup, FormControl } from "@mui/material";
+import { useNavigate } from "react-router-dom"; // Import useNavigate hook
 
-const birthdayTypes = [
-  "Kids Birthday", "Teen Birthday", "Adult Birthday", "Milestone Birthday"
+const weddingFunctions = [
+  "Haldi",
+  "Mehendi",
+  "Sangeet",
+  "Reception",
+  "Pre-Wedding Shoot",
+  "Engagement",
+  "Bachelor / Bachelorette Party",
+  "Main Ceremony",
 ];
 
 const services = [
-  { name: "Decorator", img: "/images/deco.jpg", prices: { low: 800, medium: 2000, high: 3500 }, description: "Colorful decoration for your special birthday." },
-  { name: "Cake", img: "/images/cake.jpg", prices: { low: 500, medium: 1200, high: 2000 }, description: "Delicious custom-made cakes." },
-  { name: "Games & Entertainment", img: "/images/games.jpg", prices: { low: 1000, medium: 2500, high: 4000 }, description: "Fun games and entertainers." },
-  { name: "Photography", img: "/images/photo.jpg", prices: { low: 1500, medium: 3000, high: 6000 }, description: "Memories captured in style." },
-  { name: "Catering", img: "/images/catering.jpg", prices: { low: 2000, medium: 5000, high: 10000 }, description: "Tasty food for your guests." },
-  { name: "DJ & Music", img: "/images/dj.jpg", prices: { low: 1000, medium: 2500, high: 5000 }, description: "Energetic beats and party vibes." },
-  { name: "Gifts", img: "/images/gifts.jpg", prices: { low: 400, medium: 1000, high: 2000 }, description: "Return gifts to delight your guests." },
+  { name: "Makeup Artist", img: "/images/makeup.jpg", prices: { low: 500, medium: 1500, high: 3000 }, description: "Professional makeup services for bride and groom." },
+  { name: "Photographer/Videographer", img: "/images/photo.jpg", prices: { low: 2000, medium: 5000, high: 10000 }, description: "Capturing your most cherished wedding moments." },
+  { name: "Caterers", img: "/images/catering.jpg", prices: { low: 3000, medium: 8000, high: 15000 }, description: "Delicious food to satisfy your guests." },
+  { name: "Decoration", img: "/images/deco.jpg", prices: { low: 1000, medium: 2500, high: 5000 }, description: "Beautiful wedding decorations for every occasion." },
+  { name: "Mehndi", img: "/images/mehdi.jpg", prices: { low: 500, medium: 1500, high: 2500 }, description: "Traditional henna designs for the bride." },
+  { name: "Sound & DJ", img: "/images/dj.jpg", prices: { low: 800, medium: 2500, high: 5000 }, description: "Music and entertainment for your wedding celebrations." },
+  { name: "Transport / Vehicles", img: "/images/transport.jpg", prices: { low: 1500, medium: 4000, high: 7000 }, description: "Luxury transport for the bride, groom, and guests." },
+  { name: "Return Gifts", img: "/images/gifts.jpg", prices: { low: 500, medium: 1500, high: 3000 }, description: "Memorable return gifts for your guests." },
 ];
 
-const BirthdayEvent = () => {
-  const [selected, setSelected] = useState(() => JSON.parse(localStorage.getItem("birthdaySelected")) || {});
+const WeddingEvent = () => {
+  const [selected, setSelected] = useState({});
   const [selectAll, setSelectAll] = useState({});
-  const [vendorType, setVendorType] = useState(() => JSON.parse(localStorage.getItem("birthdayVendorType")) || {});
-  const [openAlert, setOpenAlert] = useState(false);
-  const navigate = useNavigate();
+  const [vendorType, setVendorType] = useState({});
+  const navigate = useNavigate(); // Initialize navigate hook
 
-  useEffect(() => {
-    localStorage.setItem("birthdaySelected", JSON.stringify(selected));
-    localStorage.setItem("birthdayVendorType", JSON.stringify(vendorType));
-  }, [selected, vendorType]);
-
-  const handleSubmit = (type) => {
-    if (!selected[type] || selected[type].length === 0) {
-      setOpenAlert(true);
-      return;
-    }
-
-    const totalCost = calculateTotalCost(type);
-
+  const handleSubmit = (func) => {
+    console.log(`Selected Wedding Package for ${func}:`, selected[func]);
+  
+    const selectedForFunc = selected[func] || [];
+    const vendorTypesForFunc = vendorType[func] || {};
+    const totalCost = calculateTotalCost(func);
+  
+    // Add only the image file names for clarity (e.g., "name.jpg")
+    const selectedWithImageNames = selectedForFunc.map(service => ({
+      ...service,
+      imgName: service.img?.split("/").pop() || "", // Extracts file name from path
+    }));
+  
+    const dataToStore = {
+      function: func,
+      selectedServices: selectedWithImageNames,
+      vendorTypes: vendorTypesForFunc,
+      totalCost: totalCost,
+    };
+  
+    localStorage.setItem(`weddingPackage_${func}`, JSON.stringify(dataToStore));
+  
+    // Store all selected data globally with imgName added
+    const selectedWithImages = {};
+    Object.keys(selected).forEach((f) => {
+      selectedWithImages[f] = selected[f].map(service => ({
+        ...service,
+        imgName: service.img?.split("/").pop() || "",
+      }));
+    });
+  
+    localStorage.setItem("weddingAllSelected", JSON.stringify({
+      selected: selectedWithImages,
+      vendorType,
+      totalCost: calculateTotalCost(),
+    }));
+  
+    // Navigate to payment page with state
     navigate('/payment', {
       state: {
-        selectedServices: selected,
+        selectedServices: selectedWithImages,
         totalCost: totalCost,
-        birthdayTypes: birthdayTypes,
+        weddingFunctions: weddingFunctions,
       },
     });
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+  
 
-  const toggleService = (type, service) => {
+  const toggleService = (func, service) => {
     setSelected((prev) => {
-      const current = prev[type] || [];
-      const updated = current.includes(service)
-        ? current.filter((s) => s !== service)
-        : [...current, service];
-      return { ...prev, [type]: updated };
+      const current = prev[func] || [];
+      return {
+        ...prev,
+        [func]: current.includes(service)
+          ? current.filter((s) => s !== service)
+          : [...current, service],
+      };
     });
   };
 
-  const toggleSelectAll = (type) => {
-    const isAllSelected = selectAll[type];
-    setSelectAll((prev) => ({ ...prev, [type]: !isAllSelected }));
+  const toggleSelectAll = (func) => {
+    const isSelected = selectAll[func];
+    setSelectAll((prev) => ({ ...prev, [func]: !isSelected }));
     setSelected((prev) => ({
       ...prev,
-      [type]: !isAllSelected ? services.map((s) => s.name) : [],
+      [func]: !isSelected ? services.map((s) => s.name) : [],
     }));
   };
 
-  const handleVendorTypeChange = (type, service, value) => {
+  const handleVendorTypeChange = (func, service, value) => {
     setVendorType((prev) => ({
       ...prev,
-      [type]: {
-        ...prev[type],
+      [func]: {
+        ...prev[func],
         [service]: value,
       },
     }));
   };
 
-  const calculateTotalCost = (type) => {
+  const calculateTotalCost = (func) => {
     let total = 0;
-    const typeServices = selected[type] || [];
-    typeServices.forEach((service) => {
-      const vendor = vendorType[type]?.[service] || "low";
+    const funcServices = selected[func] || [];
+    funcServices.forEach((service) => {
+      const vendor = vendorType[func]?.[service] || "low";
       const serviceObj = services.find((s) => s.name === service);
       total += serviceObj.prices[vendor];
     });
@@ -88,24 +121,24 @@ const BirthdayEvent = () => {
   };
 
   return (
-    <div className="min-h-screen p-6 pt-20 bg-gradient-to-br from-blue-50 to-purple-100">
-      <Typography variant="h3" align="center" sx={{ fontWeight: "bold", color: "#3f51b5", mb: 5 }}>
-        Birthday Package Selection
+    <div className="min-h-screen p-6 pt-20 bg-gradient-to-br from-pink-50 to-purple-100">
+      <Typography variant="h3" align="center" sx={{ fontWeight: "bold", color: "#9c27b0", mb: 5 }}>
+        Wedding Package Selection
       </Typography>
 
-      {birthdayTypes.map((type) => (
-        <div key={type} className="mb-10">
+      {weddingFunctions.map((func) => (
+        <div key={func} className="mb-10">
           <Card sx={{ borderRadius: "20px", boxShadow: 3 }}>
-            <div className="bg-gradient-to-r from-blue-400 to-purple-400 p-4 rounded-t-xl">
+            <div className="bg-gradient-to-r from-purple-300 to-pink-300 p-4 rounded-t-xl">
               <div className="flex items-center justify-between">
                 <Typography variant="h5" sx={{ color: "white", fontWeight: "bold" }}>
-                  {type}
+                  {func}
                 </Typography>
                 <FormControlLabel
                   control={
                     <Checkbox
-                      checked={selectAll[type] || false}
-                      onChange={() => toggleSelectAll(type)}
+                      checked={selectAll[func] || false}
+                      onChange={() => toggleSelectAll(func)}
                       color="default"
                       sx={{ color: "white" }}
                     />
@@ -118,17 +151,17 @@ const BirthdayEvent = () => {
             <CardContent>
               <Grid container spacing={3}>
                 {services.map((service) => {
-                  const isSelected = selected[type]?.includes(service.name);
+                  const isSelected = selected[func]?.includes(service.name);
                   return (
                     <Grid item xs={12} sm={6} md={3} key={service.name}>
                       <Card
-                        onClick={() => toggleService(type, service.name)}
+                        onClick={() => toggleService(func, service.name)}
                         sx={{
                           cursor: "pointer",
                           borderRadius: "12px",
                           boxShadow: 1,
                           "&:hover": { boxShadow: 6 },
-                          border: isSelected ? "4px solid #3f51b5" : "1px solid #e0e0e0",
+                          border: isSelected ? "4px solid #9c27b0" : "1px solid #e0e0e0",
                           transform: isSelected ? "scale(1.05)" : "scale(1)",
                           transition: "all 0.3s ease",
                         }}
@@ -148,8 +181,8 @@ const BirthdayEvent = () => {
                         <div className="mt-3">
                           <Typography variant="body2">Vendor Type</Typography>
                           <RadioGroup
-                            value={vendorType[type]?.[service.name] || "low"}
-                            onChange={(e) => handleVendorTypeChange(type, service.name, e.target.value)}
+                            value={vendorType[func]?.[service.name] || "low"}
+                            onChange={(e) => handleVendorTypeChange(func, service.name, e.target.value)}
                             sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}
                           >
                             <FormControlLabel value="low" control={<Radio />} label={`Low: ₹${service.prices.low}`} />
@@ -166,37 +199,30 @@ const BirthdayEvent = () => {
           </Card>
 
           <div className="mt-4 text-center">
-            <Typography variant="body2">Total Cost for {type}: ₹{calculateTotalCost(type)}</Typography>
+            <Typography variant="body2">Total Cost for {func}: ₹{calculateTotalCost(func)}</Typography>
             <Button
               variant="contained"
               size="large"
-              onClick={() => handleSubmit(type)}
-              disabled={!selected[type] || selected[type].length === 0}
+              onClick={() => handleSubmit(func)}
               sx={{
-                bgcolor: "#3f51b5",
+                bgcolor: "#9c27b0",
                 color: "white",
                 fontWeight: "bold",
                 py: 2,
                 px: 6,
                 borderRadius: "12px",
                 boxShadow: 6,
-                ":hover": { bgcolor: "#303f9f", boxShadow: 8 },
+                ":hover": { bgcolor: "#7b1fa2", boxShadow: 8 },
                 mt: 2,
               }}
             >
-              Confirm {type} Package
+              Confirm {func} Package
             </Button>
           </div>
         </div>
       ))}
-
-      <Snackbar open={openAlert} autoHideDuration={3000} onClose={() => setOpenAlert(false)}>
-        <Alert onClose={() => setOpenAlert(false)} severity="warning" sx={{ width: '100%' }}>
-          Please select at least one service to proceed!
-        </Alert>
-      </Snackbar>
     </div>
   );
 };
 
-export default BirthdayEvent;
+export default WeddingEvent;
