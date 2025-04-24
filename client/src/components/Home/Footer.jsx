@@ -32,6 +32,7 @@ const Footer = () => {
               className="text-3xl font-extrabold"
             >
               FAS<span className="text-yellow-300">TIVO</span>
+              FAS<span className="text-yellow-300">TIVO</span>
             </motion.h2>
             <p className="text-gray-300 text-sm leading-relaxed">
               Your ultimate partner for seamless event planning. From weddings
@@ -125,6 +126,7 @@ const Footer = () => {
               <li className="flex items-center">
                 <MdEmail size={20} className="mr-3 text-yellow-300" />
                 <span>hello@fastivo.com</span>
+                <span>hello@fastivo.com</span>
               </li>
             </ul>
           </div>
@@ -157,7 +159,7 @@ const Footer = () => {
         </div>
 
         <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
-          <p>© 2025 fastivo. All rights reserved.</p>
+          <p>© 2025 FasTivo. All rights reserved.</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <a
               href="/privacy"
