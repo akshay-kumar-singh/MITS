@@ -15,7 +15,7 @@ const app = express();
 // }));
 
 app.use(cors({
-  origin: 'https://nsma.vercel.app',
+  origin: 'https://mitshack.vercel.app',
   credentials: true,
 }));
 
