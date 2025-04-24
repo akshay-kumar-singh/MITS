@@ -15,6 +15,7 @@ import CorporateEvent from "./pages/CorporateEvent";
 import HouseEvent from "./pages/HouseEvent";
 import PaymentPage from "./components/PaymentPage";
 import PaymentSuccessful from "./components/PaymentSucessful";
+import AdminPage from "./pages/AdminPage";
 
 function App() {
   return (
@@ -70,6 +71,7 @@ function App() {
         <Route path="/house-event" element={<HouseEvent/>}/>
         <Route path="/payment" element={<PaymentPage/>}/>
         <Route path="/payment-success" element={<PaymentSuccessful/>}/>
+        <Route path="/admin" element={<AdminPage/>}/>
         <Route path="*" element={<ErrorPage />} />
         </Routes>
         <Footer />
